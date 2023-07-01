@@ -17,9 +17,9 @@ pipeline {
     stage('Build image') {
       steps {
         script {
-          dockerImageBackend = docker.build("-f backend/Dockerfile ${dockerimage}")
+          dockerImageBackend = docker.build("${dockerimage}", "-f backend/Dockerfile .")
           dockerimage = 'anastasiah8696/app-frontend'
-          dockerImageFrontend = docker.build("-f frontend/Dockerfile ${dockerimage}")
+          dockerImageFrontend = docker.build("${dockerimage}", "-f frontend/Dockerfile .")
         }
       }
     }
