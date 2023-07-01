@@ -2,12 +2,11 @@ pipeline {
   agent any
   
   environment {
-    dockerImageBackend = 'anastasiah8696/app-backend'
-    dockerImageFrontend = 'anastasiah8696/app-frontend'
-    PROJECT_ID = 'devops-app-391512'
-    CLUSTER_NAME = 'autopilot-cluster-1'
-    LOCATION = '<YOUR_CLUSTER_LOCATION>'
-    CREDENTIALS_ID = 'devops-app'
+    dockerimage = 'anastasiah8696/app-backend'
+    dockerImageBackend = ''
+    dockerImageFrontend = ''
+    GKE_PROJECT = 'devops-app-391512'
+    GKE_CLUSTER = 'autopilot-cluster-1'
   }
 
   stages {
@@ -20,8 +19,9 @@ pipeline {
     stage('Build image') {
       steps {
         script {
-          dockerImageBackend = docker.build("${dockerImageBackend}", "-f backend/Dockerfile .")
-          dockerImageFrontend = docker.build("${dockerImageFrontend}", "-f frontend/Dockerfile .")
+          dockerImageBackend = docker.build("${dockerimage}", "-f backend/Dockerfile .")
+          dockerimage = 'anastasiah8696/app-frontend'
+          dockerImageFrontend = docker.build("${dockerimage}", "-f frontend/Dockerfile .")
         }
       }
     }
@@ -40,20 +40,17 @@ pipeline {
       }
     } 
 
-   stage('Deploy to GKE') {
-     steps {
-       // Authenticate with GKE
-       gkeCluster(
-         name: 'autopilot-cluster-1',
-         projectID: 'devops-app-391512',
-         credentialsID: 'devops-app'
-       ) {
-         // Run kubectl commands or apply deployment YAML
-         withEnv(["PATH+KUBECTL=/usr/local/bin"]) {
-           sh 'kubectl apply -f deploymentservice.yaml'
-         }
-       }
-     }
-   }
+    stage('Deploy to GKE') {
+      steps {
+        withCredentials([string(credentialsId: 'devops-app', variable: 'GKE_SERVICE_ACCOUNT_KEY')]) {
+          sh '''
+            echo $GKE_SERVICE_ACCOUNT_KEY > gke-key.json
+            gcloud auth activate-service-account --key-file=gke-key.json
+            gcloud container clusters get-credentials $GKE_CLUSTER --project=$GKE_PROJECT
+            kubectl apply -f deploymentservice.yaml
+          '''
+        }
+      }
+    }
   }
 }
