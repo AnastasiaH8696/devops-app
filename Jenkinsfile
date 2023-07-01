@@ -38,7 +38,7 @@ pipeline {
       }
     } 
 
-    stage('Deploy to GKE') {
+   /* stage('Deploy to GKE') {
       steps {
         script {
           def gcpCredential = credentials('devops-app')
@@ -55,6 +55,14 @@ pipeline {
               echo "Finished command kubectl..."
             '''
           }
+        }
+      }
+    }*/
+
+    stage('Deploying App to Kubernetes') {
+      steps {
+        script {
+          kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
         }
       }
     }
