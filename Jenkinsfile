@@ -2,9 +2,8 @@ pipeline {
   agent any
   
   environment {
-    dockerimage = 'anastasiah8696/app-backend'
-    dockerImageBackend = ''
-    dockerImageFrontend = ''
+    dockerImageBackend = 'anastasiah8696/app-backend'
+    dockerImageFrontend = 'anastasiah8696/app-frontend'
   }
 
   stages {
@@ -17,9 +16,8 @@ pipeline {
     stage('Build image') {
       steps {
         script {
-          dockerImageBackend = docker.build("${dockerimage}", "-f backend/Dockerfile .")
-          dockerimage = 'anastasiah8696/app-frontend'
-          dockerImageFrontend = docker.build("${dockerimage}", "-f frontend/Dockerfile .")
+          dockerImageBackend = docker.build("${dockerImageBackend}", "-f backend/Dockerfile .")
+          dockerImageFrontend = docker.build("${dockerImageFrontend}", "-f frontend/Dockerfile .")
         }
       }
     }
