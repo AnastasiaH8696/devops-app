@@ -40,18 +40,21 @@ pipeline {
       }
     } 
 
-   stage('Deploy to GKE') {
-     steps {
-       script {
-         def gcpCredential = credentials('devops-app')
-         withEnv(['GOOGLE_APPLICATION_CREDENTIALS=' + gcpCredential]) {
-           sh '''
-             gcloud container clusters get-credentials $GKE_CLUSTER --project=$GKE_PROJECT
-             kubectl apply -f deploymentservice.yaml
-           '''
-         }
-       }
-     }
-   }
+    stage('Deploy to GKE') {
+      steps {
+        script {
+          def gcpCredential = credentials('devops-app')
+          withEnv([
+            'GOOGLE_APPLICATION_CREDENTIALS=' + gcpCredential,
+            'PATH=/google-cloud-sdk/bin:${env.PATH}'
+          ]) {
+            sh '''
+              gcloud container clusters get-credentials $GKE_CLUSTER --project=$GKE_PROJECT
+              kubectl apply -f deploymentservice.yaml
+            '''
+          }
+        }
+      }
+    }
   }
 }
