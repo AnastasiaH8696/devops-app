@@ -4,6 +4,10 @@ pipeline {
   environment {
     dockerImageBackend = 'anastasiah8696/app-backend'
     dockerImageFrontend = 'anastasiah8696/app-frontend'
+    PROJECT_ID = 'devops-app-391512'
+    CLUSTER_NAME = 'autopilot-cluster-1'
+    LOCATION = '<YOUR_CLUSTER_LOCATION>'
+    CREDENTIALS_ID = 'devops-app'
   }
 
   stages {
@@ -36,18 +40,20 @@ pipeline {
       }
     } 
 
-    stage('Deploy to GKE') {
-      steps {
-        // Authenticate with GKE
-        gkeCluster(
-          name: 'autopilot-cluster-1',
-          projectID: 'devops-app-391512',
-          credentialsID: 'devops-app'
-        ) {
-          // Run kubectl commands or apply deployment YAML
-          sh 'kubectl apply -f deploymentservice.yaml'
-        }
-      }
-    }
+   stage('Deploy to GKE') {
+     steps {
+       // Authenticate with GKE
+       gkeCluster(
+         name: 'autopilot-cluster-1',
+         projectID: 'devops-app-391512',
+         credentialsID: 'devops-app'
+       ) {
+         // Run kubectl commands or apply deployment YAML
+         withEnv(["PATH+KUBECTL=/usr/local/bin"]) {
+           sh 'kubectl apply -f deploymentservice.yaml'
+         }
+       }
+     }
+   }
   }
 }
