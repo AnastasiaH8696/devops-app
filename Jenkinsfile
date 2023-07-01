@@ -40,17 +40,16 @@ pipeline {
       }
     } 
 
-    stage('Deploy to GKE') {
-      steps {
-        withCredentials([string(credentialsId: 'devops-app', variable: 'GKE_SERVICE_ACCOUNT_KEY')]) {
-          sh '''
-            echo $GKE_SERVICE_ACCOUNT_KEY > gke-key.json
-            gcloud auth activate-service-account --key-file=gke-key.json
-            gcloud container clusters get-credentials $GKE_CLUSTER --project=$GKE_PROJECT
-            kubectl apply -f deploymentservice.yaml
-          '''
-        }
-      }
-    }
+   stage('Deploy to GKE') {
+     steps {
+       withCredentials([file(credentialsId: 'devops-app', variable: 'GKE_SERVICE_ACCOUNT_KEY')]) {
+         sh '''
+           gcloud auth activate-service-account --key-file=$GKE_SERVICE_ACCOUNT_KEY
+           gcloud container clusters get-credentials $GKE_CLUSTER --project=$GKE_PROJECT
+           kubectl apply -f deploymentservice.yaml
+         '''
+       }
+     }
+   }
   }
 }
