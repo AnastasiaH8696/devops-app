@@ -57,7 +57,7 @@ pipeline {
           }
         }
       }
-    }*/
+    }
 
     stage('Deploying App to Kubernetes') {
       steps {
@@ -65,6 +65,12 @@ pipeline {
           kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
         }
       }
-    }
+    }*/
+
+    stage('Build and Deploy') {
+      steps {
+          sh 'docker-compose up -d'
+      }
+    }    
   }
 }
