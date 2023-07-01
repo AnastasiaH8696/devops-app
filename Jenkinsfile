@@ -5,8 +5,6 @@ pipeline {
     dockerimage = 'anastasiah8696/app-backend'
     dockerImageBackend = ''
     dockerImageFrontend = ''
-    GKE_PROJECT = 'devops-app-391512'
-    GKE_CLUSTER = 'autopilot-cluster-1'
   }
 
   stages {
@@ -49,7 +47,7 @@ pipeline {
             'PATH=/google-cloud-sdk/bin:${env.PATH}'
           ]) {
             sh '''
-              gcloud container clusters get-credentials $GKE_CLUSTER --project=$GKE_PROJECT
+              gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512
               kubectl apply -f deploymentservice.yaml
             '''
           }
