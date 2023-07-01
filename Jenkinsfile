@@ -44,6 +44,11 @@ stage('Deploy to GKE') {
       // Define the credentials file path
       def credentialsFile = 'usr/local/devops-app-391512-2d7bc32cd4ba.json'
 
+      // Get inside folder
+      sh '''
+      cd usr/local/bin
+      '''
+      
       // Authenticate with Google Cloud using gcloud
       sh '''
         ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${credentialsFile}
