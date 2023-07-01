@@ -47,7 +47,7 @@ pipeline {
           credentialsID: 'devops-app'
         ) {
           // Run kubectl commands or apply deployment YAML
-          sh 'kubectl apply -f deployment.yaml'
+          sh 'kubectl apply -f deploymentservice.yaml'
         }
       }
     }
