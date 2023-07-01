@@ -38,39 +38,26 @@ pipeline {
       }
     } 
 
-   /* stage('Deploy to GKE') {
-      steps {
-        script {
-          def gcpCredential = credentials('devops-app')
-          withEnv([
-            'GOOGLE_APPLICATION_CREDENTIALS=' + gcpCredential,
-            'PATH=/google-cloud-sdk/bin:${env.PATH}'
-          ]) {
-            sh '''
-              echo "Running command gcloud..."
-              gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512
-              echo "Finished command gcloud..."
-              echo "Running command kubectl..."
-              kubectl apply -f deploymentservice.yaml
-              echo "Finished command kubectl..."
-            '''
-          }
-        }
-      }
-    }
+   stage('Deploy to GKE') {
+     steps {
+       script {
+         def gcpCredential = credentials('devops-app-391512')
 
-    stage('Deploying App to Kubernetes') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
-        }
-      }
-    }*/
+         withCredentials([gcpCredential]) {
+           // Write the credential to a file
+           writeFile file: 'gcp-key.json', text: gcpCredential
 
-    stage('Build and Deploy') {
-      steps {
-          sh 'docker-compose up -d'
-      }
-    }    
+           // Authenticate with Google Cloud using gcloud
+           sh './google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=gcp-key.json'
+
+           // Configure kubectl to use GKE cluster
+           sh './google-cloud-sdk/bin/gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512'
+
+           // Execute Kubernetes deployment using kubectl
+           sh 'kubectl apply -f deploymentservice.yaml'
+         }
+       }
+     }
+   }
   }
 }
