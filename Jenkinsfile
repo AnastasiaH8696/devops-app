@@ -44,19 +44,18 @@ stage('Deploy to GKE') {
       // Define the credentials file path
       def credentialsFile = 'usr/local/devops-app-391512-2d7bc32cd4ba.json'
 
-      // Get inside folder
+
       sh '''
-      cd usr/local/bin
+      echo ${pwd}
       '''
-      
       // Authenticate with Google Cloud using gcloud
       sh '''
-        ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${credentialsFile}
+        ./usr/local/bin/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${credentialsFile}
       '''
 
       // Configure kubectl to use GKE cluster
       sh '''
-        ./google-cloud-sdk/bin/gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512
+        ./usr/local/bin/google-cloud-sdk/bin/gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512
       '''
 
       // Execute Kubernetes deployment using kubectl
