@@ -38,12 +38,18 @@ pipeline {
       }
     } 
 
-    /*stage('Deploying notes-app container to Kubernetes') {
+    stage('Deploy to GKE') {
       steps {
-        script {
-          kubernetesDeploy(configs: 'deploymentservice.yml', kubeconfigId: 'kubernetes')
+        // Authenticate with GKE
+        gkeCluster(
+          name: 'autopilot-cluster-1',
+          projectID: 'devops-app-391512',
+          credentialsID: 'devops-app'
+        ) {
+          // Run kubectl commands or apply deployment YAML
+          sh 'kubectl apply -f deployment.yaml'
         }
       }
-    }*/
+    }
   }
 }
