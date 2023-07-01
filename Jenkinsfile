@@ -44,7 +44,7 @@ pipeline {
      steps {
        script {
          def gcpCredential = credentials('devops-app')
-         withEnv(['GOOGLE_APPLICATION_CREDENTIALS=' + gcpCredential.filePath]) {
+         withEnv(['GOOGLE_APPLICATION_CREDENTIALS=' + gcpCredential]) {
            sh '''
              gcloud container clusters get-credentials $GKE_CLUSTER --project=$GKE_PROJECT
              kubectl apply -f deploymentservice.yaml
