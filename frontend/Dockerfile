@@ -13,9 +13,6 @@ RUN npm install
 # Copy the rest of the frontend code to the container
 COPY . .
 
-# Build the React app
-RUN npm run build
-
 # Set the command to run when the container starts
 CMD ["npm", "start"]
 
