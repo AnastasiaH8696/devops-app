@@ -47,8 +47,12 @@ pipeline {
             'PATH=/google-cloud-sdk/bin:${env.PATH}'
           ]) {
             sh '''
+              echo "Running command gcloud..."
               gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512
+              echo "Finished command gcloud..."
+              echo "Running command kubectl..."
               kubectl apply -f deploymentservice.yaml
+              echo "Finished command kubectl..."
             '''
           }
         }
