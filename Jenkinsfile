@@ -49,12 +49,12 @@ stage('Deploy to GKE') {
       
       // Authenticate with Google Cloud using gcloud
       sh '''
-        ./usr/local/bin/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${credentialsFile}
+        ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=${credentialsFile}
       '''
 
       // Configure kubectl to use GKE cluster
       sh '''
-        ./usr/local/bin/google-cloud-sdk/bin/gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512
+        ./google-cloud-sdk/bin/gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512
       '''
 
       // Execute Kubernetes deployment using kubectl
