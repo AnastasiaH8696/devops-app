@@ -51,7 +51,7 @@ stage('Deploy to GKE') {
         sh 'gcloud auth activate-service-account --key-file=/var/jenkins_home/workspace/devops-app_master/devops-app-391512-2d7bc32cd4ba.json'
 
         // Configure kubectl to use GKE cluster
-        sh 'gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512'
+        sh 'gcloud container clusters get-credentials autopilot-cluster-2 --region me-west1 --project devops-app-391512'
 
         // Execute Kubernetes deployment using kubectl
         sh 'kubectl apply -f deploymentservice.yaml'
