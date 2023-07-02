@@ -14,7 +14,7 @@ pipeline {
       }
     }
 
-    /*stage('Build image') {
+    stage('Build image') {
       steps {
         script {
           dockerImageBackend = docker.build("${dockerimage}", "-f backend/Dockerfile .")
@@ -36,7 +36,7 @@ pipeline {
           }
         }
       }
-    } */
+    } 
 
 stage('Deploy to GKE') {
   steps {
@@ -55,6 +55,21 @@ stage('Deploy to GKE') {
 
         // Execute Kubernetes deployment using kubectl
         sh 'kubectl apply -f deploymentservice.yaml'
+
+        // Check server readiness
+        sh 'kubectl rollout status deployment/frontend'
+
+        // Check server readiness
+        sh 'kubectl rollout status deployment/backend'
+
+        // Additional checks if required
+        sh 'kubectl get pods'
+        sh 'kubectl describe deployment frontend'
+        sh 'kubectl describe deployment backend'
+
+        // Get the service URL
+        def serviceURL = sh(returnStdout: true, script: 'kubectl get service/frontend-service -o jsonpath="{.status.loadBalancer.ingress[0].ip}"').trim()
+        echo "Service URL: http://${serviceURL}/"
       }
     }
   }
