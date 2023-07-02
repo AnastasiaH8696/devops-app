@@ -41,28 +41,25 @@ pipeline {
 stage('Deploy to GKE') {
   steps {
     script {
-      // Authenticate with Google Cloud using gcloud
-      sh '''
-      export PATH="/var/jenkins_home/workspace/devops-app_master/google-cloud-sdk/bin:$PATH"
-      gcloud version
-      '''
-      
-      sh '''
-      gcloud auth activate-service-account --key-file=/var/jenkins_home/workspace/devops-app_master/devops-app-391512-2d7bc32cd4ba.json
-      '''
+      // Set the PATH environment variable
+      withEnv(["PATH+EXTRA=/var/jenkins_home/workspace/devops-app_master/google-cloud-sdk/bin"]) {
 
-      // Configure kubectl to use GKE cluster
-      sh '''
-      gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512
-      '''
+        // Validation of the gcloud
+        sh 'gcloud version'
+        
+        // Authenticate with Google Cloud using gcloud
+        sh 'gcloud auth activate-service-account --key-file=/var/jenkins_home/workspace/devops-app_master/devops-app-391512-2d7bc32cd4ba.json'
 
-      // Execute Kubernetes deployment using kubectl
-      sh '''
-        kubectl apply -f deploymentservice.yaml
-      '''
+        // Configure kubectl to use GKE cluster
+        sh 'gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512'
+
+        // Execute Kubernetes deployment using kubectl
+        sh 'kubectl apply -f deploymentservice.yaml'
+      }
     }
   }
 }
+
 
   }
 }
