@@ -14,7 +14,7 @@ pipeline {
       }
     }
 
-    /*stage('Build image') {
+    stage('Build image') {
       steps {
         script {
           dockerImageBackend = docker.build("${dockerimage}", "-f backend/Dockerfile .")
@@ -36,7 +36,7 @@ pipeline {
           }
         }
       }
-    } */
+    } 
 
 stage('Deploy to GKE') {
   steps {
@@ -68,8 +68,10 @@ stage('Deploy to GKE') {
         sh 'kubectl describe deployment backend'
 
         // Get the service URL
-        def serviceURL = sh(returnStdout: true, script: 'kubectl get service/frontend-service -o jsonpath="{.status.loadBalancer.ingress[0].ip}"').trim()
-        echo "Service URL: http://${serviceURL}/"
+        echo "Navigate to https://console.cloud.google.com/kubernetes/list/overview?project=devops-app-391512"
+        echo "Go to Services & Ingress"
+        echo "Click on frontend-service"
+        echo "Scroll down to Ports and click on PORT FORWARDING and follow the instructions"
       }
     }
   }
