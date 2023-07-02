@@ -14,7 +14,7 @@ pipeline {
       }
     }
 
-    stage('Build image') {
+    /*stage('Build image') {
       steps {
         script {
           dockerImageBackend = docker.build("${dockerimage}", "-f backend/Dockerfile .")
@@ -36,7 +36,7 @@ pipeline {
           }
         }
       }
-    } 
+    } */
 
 stage('Deploy to GKE') {
   steps {
