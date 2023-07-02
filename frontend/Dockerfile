@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copy the rest of the frontend code to the container
-COPY . .
+COPY frontend/ .
 
 # Set the command to run when the container starts
 CMD ["npm", "start"]
