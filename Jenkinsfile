@@ -43,12 +43,12 @@ stage('Deploy to GKE') {
     script {
       // Authenticate with Google Cloud using gcloud
       sh '''
-        ./google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=/var/jenkins_home/workspace/devops-app_master/devops-app-391512-2d7bc32cd4ba.json
+      gcloud auth activate-service-account --key-file=/var/jenkins_home/workspace/devops-app_master/devops-app-391512-2d7bc32cd4ba.json
       '''
 
       // Configure kubectl to use GKE cluster
       sh '''
-        ./google-cloud-sdk/bin/gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512
+      gcloud container clusters get-credentials autopilot-cluster-1 --region europe-west1 --project devops-app-391512
       '''
 
       // Execute Kubernetes deployment using kubectl
