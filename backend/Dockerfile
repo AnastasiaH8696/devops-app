@@ -5,13 +5,13 @@ FROM node:14
 WORKDIR /app
 
 # Copy the package.json and package-lock.json files to the working directory
-COPY package*.json ./
+COPY backend/package*.json ./
 
 # Install the dependencies
 RUN npm install
 
 # Copy the rest of the application code to the working directory
-COPY . .
+COPY backend/ .
 
 # Expose the port that the Express.js server will listen on
 EXPOSE 5000
