@@ -68,7 +68,8 @@ stage('Deploy to GKE') {
         sh 'kubectl describe deployment backend'
 
         // Get the service URL
-        sh 'gcloud container clusters get-credentials autopilot-cluster-2 --region me-west1 --project devops-app-391512 && kubectl port-forward $(kubectl get pod --selector="app=frontend" --output jsonpath='{.items[0].metadata.name}') 8080:3000'
+        sh "gcloud container clusters get-credentials autopilot-cluster-2 --region me-west1 --project devops-app-391512 && kubectl port-forward \$(kubectl get pod --selector=\"app=frontend\" --output jsonpath='{.items[0].metadata.name}') 8080:3000"
+
       }
     }
   }
