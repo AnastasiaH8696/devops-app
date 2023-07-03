@@ -68,10 +68,7 @@ stage('Deploy to GKE') {
         sh 'kubectl describe deployment backend'
 
         // Get the service URL
-        echo "Navigate to https://console.cloud.google.com/kubernetes/list/overview?project=devops-app-391512"
-        echo "Go to Services & Ingress"
-        echo "Click on frontend-service"
-        echo "Scroll down to Ports and click on PORT FORWARDING and follow the instructions"
+        sh 'gcloud container clusters get-credentials autopilot-cluster-2 --region me-west1 --project devops-app-391512 && kubectl port-forward $(kubectl get pod --selector="app=frontend" --output jsonpath='{.items[0].metadata.name}') 8080:3000'
       }
     }
   }
